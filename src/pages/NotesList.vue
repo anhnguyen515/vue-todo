@@ -1,5 +1,21 @@
-<template>Notes list page</template>
+<template>
+  <div v-if="nameStore.name">
+    Welcome to Notes list page, {{ nameStore.name }}
+  </div>
+</template>
 
-<script setup></script>
+<script setup>
+import { watchEffect } from "vue";
+import { nameStore } from "../store/nameStore";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+watchEffect(() => {
+  if (!nameStore.name) {
+    router.push("/");
+  }
+});
+</script>
 
 <style lang="scss" scoped></style>
