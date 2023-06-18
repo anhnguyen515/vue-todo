@@ -5,17 +5,10 @@
 </template>
 
 <script setup>
-import { watchEffect } from "vue";
+import { useCheckUsernameExists } from "../composables/useCheckUsernameExists";
 import { nameStore } from "../store/nameStore";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
-
-watchEffect(() => {
-  if (!nameStore.name) {
-    router.push("/");
-  }
-});
+useCheckUsernameExists();
 </script>
 
 <style lang="scss" scoped></style>
