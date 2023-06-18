@@ -1,11 +1,11 @@
 <template>
-  <button @click="emit('onClick')" :class="{ [color]: true, [variant]: true }">
+  <button @click="emit('click')" :class="{ [color]: true, [variant]: true }">
     <slot>Content</slot>
   </button>
 </template>
 
 <script setup>
-const emit = defineEmits(["onClick"]);
+const emit = defineEmits(["click"]);
 const props = defineProps({
   color: { type: String, default: "primary" },
   variant: { type: String, default: "contained" },
@@ -16,10 +16,10 @@ const props = defineProps({
 @import "../assets/root";
 @import "./button";
 
-@each $palette-name, $palette-value in $palette {
+@each $name, $value in $palette {
   @each $variant in $variants {
-    .#{$palette-name}.#{$variant} {
-      @include button($palette-value, $variant);
+    .#{$name}.#{$variant} {
+      @include button($value, $variant);
     }
   }
 }

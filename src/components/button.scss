@@ -1,6 +1,6 @@
 @import "../assets/root";
 
-@mixin button($btn-color, $variant: contained) {
+@mixin button($btn-color, $variant) {
   border-radius: $padding-1;
   cursor: pointer;
   font-size: $font-regular;
