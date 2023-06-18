@@ -1,0 +1,56 @@
+@import "../assets/root";
+
+@mixin button($btn-color, $variant: contained) {
+  border-radius: $padding-1;
+  cursor: pointer;
+  font-size: $font-regular;
+  font-weight: 500;
+  padding: $padding-3 $padding-4;
+  transition: background-color 0.2s, color 0.2s;
+
+  @if $variant == "contained" {
+    background-color: $btn-color;
+    border: none;
+
+    @if $btn-color != $secondary {
+      color: $gray-100;
+    } @else {
+      color: $gray-700;
+    }
+
+    &:hover {
+      background-color: darken($btn-color, 10%);
+    }
+
+    &:active {
+      background-color: darken($btn-color, 20%);
+    }
+  } @else if $variant == "outlined" {
+    background-color: transparent;
+    border: 1px solid;
+
+    @if $btn-color != $secondary {
+      color: $btn-color;
+    } @else {
+      color: $gray-700;
+    }
+
+    &:hover {
+      @if $btn-color != $secondary {
+        background-color: lighten($btn-color, 30%);
+        color: darken($btn-color, 10%);
+      } @else {
+        background-color: $gray-200;
+        color: $gray-800;
+      }
+    }
+
+    &:active {
+      @if $btn-color != $secondary {
+        background-color: lighten($btn-color, 25%);
+      } @else {
+        background-color: $gray-300;
+      }
+    }
+  }
+}

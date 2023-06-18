@@ -1,0 +1,21 @@
+$palette: (
+  default: $default,
+  primary: $primary,
+  secondary: $secondary,
+  info: $info,
+  success: $success,
+  danger: $danger,
+  warning: $warning,
+);
+
+$variants: contained, outlined;
+
+$font-small: 8px;
+$font-regular: 16px;
+$font-large: 24px;
+$font-extreme: 32px;
+
+$padding-1: 4px;
+$padding-2: 8px;
+$padding-3: 12px;
+$padding-4: 16px;
