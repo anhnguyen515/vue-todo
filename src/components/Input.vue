@@ -1,6 +1,8 @@
 <template>
   <input
     class="input"
+    :class="{ error: inputError, disabled }"
+    :disabled="disabled"
     :value="modelValue"
     @input="emit('update:modelValue', $event.target.value)"
     :style="inputStyle"
@@ -12,7 +14,10 @@ import { computed } from "vue";
 
 const props = defineProps({
   modelValue: String,
+  // placeholder: { type: String, default: "" },
   textAlign: { type: String, default: "left" },
+  inputError: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
 });
 const emit = defineEmits(["update:modelValue"]);
 
@@ -40,7 +45,16 @@ const inputStyle = computed(() => {
   }
 
   &:focus {
-    outline: none;
+    outline-color: $primary;
+  }
+
+  &.error {
+    outline-color: $danger;
+  }
+
+  &.disabled {
+    background-color: $gray-500;
+    pointer-events: none;
   }
 }
 </style>

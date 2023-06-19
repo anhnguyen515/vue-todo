@@ -1,5 +1,9 @@
 <template>
-  <button @click="emit('click')" :class="{ [color]: true, [variant]: true }">
+  <button
+    :disabled="disabled"
+    @click="emit('click')"
+    :class="{ [color]: true, [variant]: true, disabled }"
+  >
     <slot>Content</slot>
   </button>
 </template>
@@ -7,6 +11,7 @@
 <script setup>
 const emit = defineEmits(["click"]);
 const props = defineProps({
+  disabled: { type: Boolean, default: false },
   color: { type: String, default: "primary" },
   variant: { type: String, default: "contained" },
 });
@@ -20,6 +25,10 @@ const props = defineProps({
   @each $variant in $variants {
     .#{$name}.#{$variant} {
       @include button($value, $variant);
+      &.disabled {
+        background-color: $gray-500;
+        pointer-events: none;
+      }
     }
   }
 }

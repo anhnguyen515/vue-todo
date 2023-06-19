@@ -1,13 +1,26 @@
 import { reactive } from "vue";
 
 export const nameStore = reactive({
-  name: "",
-  updateName(name) {
-    this.name = name;
-    localStorage.setItem("username", JSON.stringify(name));
+  currentUser: "",
+  usersList: [],
+  updateCurrentUser(name) {
+    this.currentUser = name;
+    localStorage.setItem("currentUser", JSON.stringify(name));
   },
-  resetName() {
-    this.name = "";
-    localStorage.removeItem("username");
+  updateUsersList(newUsersList) {
+    this.usersList = [...newUsersList];
+    localStorage.setItem("usersList", JSON.stringify(this.usersList));
+  },
+  addNewUser(name) {
+    this.usersList.push(name);
+    localStorage.setItem("usersList", JSON.stringify(this.usersList));
+  },
+  removeUser(name) {
+    const newUsersList = this.usersList.filter((item) => item !== name);
+    localStorage.setItem("usersList", JSON.stringify(newUsersList));
+  },
+  removeCurrentUser() {
+    this.currentUser = "";
+    localStorage.removeItem("currentUser");
   },
 });

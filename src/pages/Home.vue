@@ -1,40 +1,41 @@
 <script setup>
-import { ref, watch, watchEffect } from "vue";
+import { computed, ref, watchEffect } from "vue";
 import { RouterLink } from "vue-router";
 import Button from "../components/Button.vue";
 import Input from "../components/Input.vue";
-import { debounce } from "../utils";
+import Select from "../components/Select.vue";
 import { nameStore } from "../store/nameStore";
 
-const value = ref("");
+const username = ref("");
+
+const inputError = computed(
+  () => nameStore.usersList.filter((item) => item === username.value).length > 0
+);
 
 watchEffect(() => {
-  const localName = localStorage.getItem("username");
-  if (localName) {
-    nameStore.updateName(JSON.parse(localName));
+  const usersList = JSON.parse(localStorage.getItem("usersList"));
+  if (usersList?.length > 0) {
+    nameStore.updateUsersList(usersList);
   }
 });
 
-const nameInputDebounce = debounce((value) => {
-  nameStore.updateName(value);
-});
-
-const handleResetName = () => {
-  value.value = "";
-  nameStore.resetName();
-};
-
-watch(value, (newValue) => {
-  if (newValue) {
-    nameInputDebounce(newValue);
+function addNewUser() {
+  if (!inputError.value) {
+    nameStore.addNewUser(username.value);
+    nameStore.updateCurrentUser(username.value);
   }
-});
+}
+
+function changeUser() {
+  username.value = "";
+  nameStore.removeCurrentUser();
+}
 </script>
 
 <template>
   <div class="app-wrapper">
-    <template v-if="nameStore.name">
-      <h1>Hello there, {{ nameStore.name }}!</h1>
+    <template v-if="nameStore.currentUser">
+      <h1>Hello there, {{ nameStore.currentUser }}!</h1>
       <p>How can I help you?</p>
       <div class="btn-group">
         <RouterLink to="/new-note">
@@ -46,11 +47,32 @@ watch(value, (newValue) => {
           </Button>
         </RouterLink>
       </div>
-      <span class="name-reset" @click="handleResetName">It's not me</span>
+      <span class="name-reset" @click="changeUser">Change user</span>
     </template>
     <template v-else>
       <h1>May I ask who I am talking to?</h1>
-      <Input v-model="value" class="name-input" text-align="center" />
+      <div class="users-container">
+        <Select
+          v-if="nameStore.usersList.length > 0"
+          :options-list="nameStore.usersList"
+        />
+        <span
+          v-if="nameStore.usersList.length > 0"
+          style="display: flex; align-items: center"
+        >
+          or
+        </span>
+        <Input
+          @keypress.enter="addNewUser"
+          v-model="username"
+          text-align="center"
+          :input-error="inputError"
+          placeholder="Enter a name"
+        />
+        <Button :disabled="!username || inputError" @click="addNewUser">
+          <i class="bi bi-plus-lg"></i>
+        </Button>
+      </div>
     </template>
   </div>
 </template>
@@ -58,10 +80,6 @@ watch(value, (newValue) => {
 <style lang="scss" scoped>
 @import "../assets/root.scss";
 .app-wrapper {
-  .name-input {
-    margin-top: $padding-2;
-  }
-
   p {
     font-size: $font-large;
   }
@@ -70,6 +88,14 @@ watch(value, (newValue) => {
     margin-top: $padding-4;
     display: flex;
     gap: $padding-2;
+  }
+
+  .users-container {
+    display: flex;
+    // align-items: center;
+    justify-content: center;
+    gap: $padding-2;
+    margin-top: $padding-2;
   }
 
   .name-reset {

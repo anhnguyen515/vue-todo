@@ -1,3 +1,4 @@
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./style/main.scss";
 
 import { createApp } from "vue";
