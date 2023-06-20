@@ -3,7 +3,7 @@ import { computed, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import Button from "../components/Button.vue";
 import Input from "../components/Input.vue";
-import UserSelect from "../components/UserSelect.vue";
+import Select from "../components/Select.vue";
 import { nameStore } from "../store/nameStore";
 
 const username = ref("");
@@ -36,6 +36,14 @@ function changeUser() {
   username.value = "";
   nameStore.removeCurrentUser();
 }
+
+function handleSelectItem(value) {
+  nameStore.updateCurrentUser(value);
+}
+
+function handleRemoveItem(value) {
+  nameStore.removeUser(value);
+}
 </script>
 
 <template>
@@ -60,7 +68,17 @@ function changeUser() {
     <template v-else>
       <h1>May I ask who I am talking to?</h1>
       <div class="users-container">
-        <UserSelect v-if="nameStore.usersList.length > 0" />
+        <Select
+          v-if="nameStore.usersList.length > 0"
+          :options-list="nameStore.usersList"
+          :handle-select-item="handleSelectItem"
+          :item-action="handleRemoveItem"
+          placeholder="I've been here before"
+        >
+          <template #item-icon>
+            <i class="bi bi-trash"></i>
+          </template>
+        </Select>
         <span
           v-if="nameStore.usersList.length > 0"
           style="display: flex; align-items: center"
@@ -72,7 +90,7 @@ function changeUser() {
           v-model="username"
           text-align="center"
           :input-error="inputError"
-          placeholder="Enter a name"
+          placeholder="I'm a new user"
         />
         <Button :disabled="!username || inputError" @click="addNewUser">
           <i class="bi bi-plus-lg"></i>
@@ -97,7 +115,6 @@ function changeUser() {
 
   .users-container {
     display: flex;
-    // align-items: center;
     justify-content: center;
     gap: $padding-2;
     margin-top: $padding-2;

@@ -1,5 +1,6 @@
 <template>
   <input
+    v-if="inputType === 'input'"
     class="input"
     :class="{ error: inputError, disabled }"
     :disabled="disabled"
@@ -7,6 +8,16 @@
     @input="emit('update:modelValue', $event.target.value)"
     :style="inputStyle"
   />
+  <textarea
+    v-else
+    rows="5"
+    class="input"
+    :class="{ error: inputError, disabled }"
+    :disabled="disabled"
+    :value="modelValue"
+    @input="emit('update:modelValue', $event.target.value)"
+    :style="inputStyle"
+  ></textarea>
 </template>
 
 <script setup>
@@ -18,6 +29,7 @@ const props = defineProps({
   textAlign: { type: String, default: "left" },
   inputError: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
+  inputType: { type: String, default: "input" },
 });
 const emit = defineEmits(["update:modelValue"]);
 

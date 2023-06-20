@@ -18,5 +18,6 @@ import { RouterView } from "vue-router";
   width: 100%;
   min-height: 100vh;
   gap: $padding-2;
+  padding: $padding-4;
 }
 </style>

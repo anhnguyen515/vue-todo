@@ -1,7 +1,5 @@
 <template>
-  <div v-if="nameStore.currentUser">
-    Welcome to Notes list page, {{ nameStore.currentUser }}
-  </div>
+  <div>Welcome to Notes list page, {{ nameStore.currentUser }}</div>
 </template>
 
 <script setup>
