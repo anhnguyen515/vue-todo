@@ -1,14 +1,14 @@
 <template>
-  <div v-if="nameStore.name">
-    Welcome to Notes list page, {{ nameStore.name }}
+  <div v-if="nameStore.currentUser">
+    Welcome to Notes list page, {{ nameStore.currentUser }}
   </div>
 </template>
 
 <script setup>
-import { useCheckUsernameExists } from "../composables/useCheckUsernameExists";
+import { useAuth } from "../composables/useAuth";
 import { nameStore } from "../store/nameStore";
 
-useCheckUsernameExists();
+useAuth();
 </script>
 
 <style lang="scss" scoped></style>

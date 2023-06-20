@@ -1,12 +1,14 @@
 <script setup>
 import { computed, ref, watchEffect } from "vue";
-import { RouterLink } from "vue-router";
+import { useRouter } from "vue-router";
 import Button from "../components/Button.vue";
 import Input from "../components/Input.vue";
-import Select from "../components/Select.vue";
+import UserSelect from "../components/UserSelect.vue";
 import { nameStore } from "../store/nameStore";
 
 const username = ref("");
+
+const router = useRouter();
 
 const inputError = computed(
   () => nameStore.usersList.filter((item) => item === username.value).length > 0
@@ -14,8 +16,12 @@ const inputError = computed(
 
 watchEffect(() => {
   const usersList = JSON.parse(localStorage.getItem("usersList"));
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   if (usersList?.length > 0) {
     nameStore.updateUsersList(usersList);
+  }
+  if (currentUser) {
+    nameStore.updateCurrentUser(currentUser);
   }
 });
 
@@ -38,24 +44,23 @@ function changeUser() {
       <h1>Hello there, {{ nameStore.currentUser }}!</h1>
       <p>How can I help you?</p>
       <div class="btn-group">
-        <RouterLink to="/new-note">
-          <Button variant="outlined">I want to create a new note</Button>
-        </RouterLink>
-        <RouterLink to="/notes-list">
-          <Button color="secondary" variant="outlined">
-            I want to check my notes list
-          </Button>
-        </RouterLink>
+        <Button variant="outlined" @click="router.push('/new-note')">
+          I want to create a new note
+        </Button>
+        <Button
+          color="secondary"
+          variant="outlined"
+          @click="router.push('/notes-list')"
+        >
+          I want to check my notes list
+        </Button>
       </div>
       <span class="name-reset" @click="changeUser">Change user</span>
     </template>
     <template v-else>
       <h1>May I ask who I am talking to?</h1>
       <div class="users-container">
-        <Select
-          v-if="nameStore.usersList.length > 0"
-          :options-list="nameStore.usersList"
-        />
+        <UserSelect v-if="nameStore.usersList.length > 0" />
         <span
           v-if="nameStore.usersList.length > 0"
           style="display: flex; align-items: center"

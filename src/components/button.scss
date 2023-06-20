@@ -8,6 +8,11 @@
   padding: $padding-3 $padding-4;
   transition: background-color 0.2s, color 0.2s;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $padding-4;
+
   @if $variant == "contained" {
     background-color: $btn-color;
     border: none;

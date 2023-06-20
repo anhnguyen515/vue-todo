@@ -32,7 +32,7 @@ const inputStyle = computed(() => {
 @import "../assets/root.scss";
 
 .input {
-  background-color: $gray-200;
+  background-color: $secondary;
   border: none;
   border-radius: 4px;
   font-size: $font-regular;
@@ -41,7 +41,7 @@ const inputStyle = computed(() => {
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: $gray-300;
+    background-color: darken($secondary, 10%);
   }
 
   &:focus {

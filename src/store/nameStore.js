@@ -17,6 +17,7 @@ export const nameStore = reactive({
   },
   removeUser(name) {
     const newUsersList = this.usersList.filter((item) => item !== name);
+    this.usersList = [...newUsersList];
     localStorage.setItem("usersList", JSON.stringify(newUsersList));
   },
   removeCurrentUser() {

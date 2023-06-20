@@ -7,6 +7,7 @@ import App from "./App.vue";
 import Home from "./pages/Home.vue";
 import NewNote from "./pages/NewNote.vue";
 import NotesList from "./pages/NotesList.vue";
+import Popper from "vue3-popper";
 
 const routes = [
   { path: "/", name: "Home", component: Home },
@@ -22,5 +23,5 @@ const router = createRouter({
 const app = createApp(App);
 
 app.use(router);
-
+app.component("Popper", Popper);
 app.mount("#app");

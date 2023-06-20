@@ -4,7 +4,9 @@
     @click="emit('click')"
     :class="{ [color]: true, [variant]: true, disabled }"
   >
-    <slot>Content</slot>
+    <slot name="start-icon"></slot>
+    <slot></slot>
+    <slot name="end-icon"></slot>
   </button>
 </template>
 
