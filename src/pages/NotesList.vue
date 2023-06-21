@@ -1,15 +1,5 @@
 <template>
-  <template v-if="currentUserNotesList.length > 0">
-    <div class="notes-container">
-      <Note v-for="note in currentUserNotesList" :note="note" />
-      <Button variant="outlined" @click="router.push('/new-note')">
-        Create a new note
-      </Button>
-    </div>
-  </template>
-
-  <template v-else>
-    <h1>It's empty here...</h1>
+  <div class="notes-container">
     <div class="cta-area">
       <Button color="secondary" variant="outlined" @click="router.back()">
         <template #start-icon>
@@ -17,11 +7,23 @@
         </template>
         Go back
       </Button>
-      <Button variant="outlined" @click="router.push('/new-note')">
+      <Button
+        variant="outlined"
+        @click="router.push('/new-note')"
+        class="flex-btn"
+      >
         Create a new note
       </Button>
     </div>
-  </template>
+
+    <template v-if="currentUserNotesList.length > 0">
+      <Note v-for="note in currentUserNotesList" :note="note" />
+    </template>
+
+    <template v-else>
+      <h1 style="text-align: center">It's empty here...</h1>
+    </template>
+  </div>
 </template>
 
 <script setup>
@@ -48,13 +50,16 @@ useAuth();
 .notes-container {
   display: flex;
   flex-direction: column;
-  gap: $padding-4;
+  gap: $padding-2;
   max-width: 30rem;
   width: 100%;
 }
 .cta-area {
-  margin-top: $padding-2;
   display: flex;
   gap: $padding-2;
+
+  .flex-btn {
+    flex: 1;
+  }
 }
 </style>

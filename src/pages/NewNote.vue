@@ -66,8 +66,9 @@ const currentUserNotesList = computed(() =>
 
 const noteContentList = computed(() => {
   const contentArr = [];
-  noteContent.value.split("\n").forEach((item) => {
+  noteContent.value.split("\n").forEach((item, index) => {
     contentArr.push({
+      id: index,
       content: item,
       checked: false,
     });
