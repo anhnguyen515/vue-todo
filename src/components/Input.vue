@@ -6,18 +6,23 @@
     :disabled="disabled"
     :value="modelValue"
     @input="emit('update:modelValue', $event.target.value)"
+    :placeholder="placeholder"
     :style="inputStyle"
   />
-  <textarea
-    v-else
-    rows="5"
-    class="input"
-    :class="{ error: inputError, disabled }"
-    :disabled="disabled"
-    :value="modelValue"
-    @input="emit('update:modelValue', $event.target.value)"
-    :style="inputStyle"
-  ></textarea>
+  <div v-else class="textarea-wrapper">
+    <textarea
+      rows="5"
+      class="input textarea"
+      :class="{ error: inputError, disabled }"
+      :disabled="disabled"
+      :value="modelValue"
+      @input="emit('update:modelValue', $event.target.value)"
+      :placeholder="placeholder"
+      maxlength="100"
+      :style="inputStyle"
+    ></textarea>
+    <span class="character-limit">{{ modelValue.length }}/100</span>
+  </div>
 </template>
 
 <script setup>
@@ -25,7 +30,7 @@ import { computed } from "vue";
 
 const props = defineProps({
   modelValue: String,
-  // placeholder: { type: String, default: "" },
+  placeholder: { type: String, default: "" },
   textAlign: { type: String, default: "left" },
   inputError: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
@@ -67,6 +72,23 @@ const inputStyle = computed(() => {
   &.disabled {
     background-color: $gray-500;
     pointer-events: none;
+  }
+
+  &.textarea {
+    width: 100%;
+    resize: none;
+  }
+}
+.textarea-wrapper {
+  position: relative;
+  width: auto;
+
+  .character-limit {
+    position: absolute;
+    right: $padding-1;
+    bottom: $padding-2;
+    font-size: $font-small;
+    color: $gray-600;
   }
 }
 </style>

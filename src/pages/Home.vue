@@ -52,14 +52,10 @@ function handleRemoveItem(value) {
       <h1>Hello there, {{ nameStore.currentUser }}!</h1>
       <p>How can I help you?</p>
       <div class="btn-group">
-        <Button variant="outlined" @click="router.push('/new-note')">
+        <Button @click="router.push('/new-note')">
           I want to create a new note
         </Button>
-        <Button
-          color="secondary"
-          variant="outlined"
-          @click="router.push('/notes-list')"
-        >
+        <Button color="secondary" @click="router.push('/notes-list')">
           I want to check my notes list
         </Button>
       </div>

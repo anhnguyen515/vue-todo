@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $padding-4;
+  gap: $padding-3;
 
   @if $variant == "contained" {
     background-color: $btn-color;
