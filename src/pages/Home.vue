@@ -71,7 +71,7 @@ function handleRemoveItem(value) {
           :item-action="handleRemoveItem"
           placeholder="I've been here before"
         >
-          <template #item-icon>
+          <template #end-icon>
             <i class="bi bi-trash"></i>
           </template>
         </Select>

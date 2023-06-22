@@ -51,8 +51,7 @@ useAuth();
   display: flex;
   flex-direction: column;
   gap: $padding-2;
-  max-width: 30rem;
-  width: 100%;
+  min-width: 30rem;
 }
 .cta-area {
   display: flex;

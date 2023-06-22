@@ -1,6 +1,11 @@
 <template>
-  <Popper offsetDistance="4">
-    <Button color="secondary" ref="selectRef">
+  <Popper offsetDistance="4" :show="openPopper">
+    <Button
+      color="secondary"
+      ref="selectRef"
+      @click="openPopper = !openPopper"
+      :style="dropdownStyle"
+    >
       {{ selectLabel }}
       <template #end-icon>
         <i class="bi bi-chevron-down"></i>
@@ -9,15 +14,24 @@
     <template #content>
       <div class="select-dropdown" :style="dropdownStyle">
         <div v-for="option in optionsList" class="select-item">
-          <span @click="handleSelectItem(option)" class="select-label">
+          <span
+            @click="
+              () => {
+                handleSelectItem(option);
+                selectValue = option;
+                openPopper = false;
+              }
+            "
+            class="select-label"
+          >
             {{ option }}
           </span>
           <div
-            v-if="$slots['item-icon']"
+            v-if="$slots['end-icon']"
             @click="itemAction(option)"
-            class="item-icon"
+            class="end-icon"
           >
-            <slot name="item-icon"></slot>
+            <slot name="end-icon"></slot>
           </div>
         </div>
       </div>
@@ -26,12 +40,13 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watchEffect } from "vue";
+import { computed, onMounted, ref } from "vue";
 import Button from "./Button.vue";
 
 const selectValue = ref("");
 const selectRef = ref(null);
 const dropdownWidth = ref(0);
+const openPopper = ref(false);
 
 const selectLabel = computed(() => selectValue.value || props.placeholder);
 
@@ -64,13 +79,10 @@ const dropdownStyle = computed(() => {
   font-weight: 500;
   display: flex;
   flex-direction: column;
-  min-width: 10rem;
 
   .select-item {
     display: flex;
-    gap: $padding-4;
     align-items: center;
-    justify-content: space-between;
     transition: background-color 0.2s;
     cursor: pointer;
     padding-right: $padding-4;
@@ -84,9 +96,14 @@ const dropdownStyle = computed(() => {
       flex: 1;
     }
 
-    .item-icon {
+    .start-icon {
+      padding-left: $padding-4;
+    }
+
+    .end-icon {
       transition: color 0.2s;
       color: $gray-600;
+      margin-left: auto;
 
       &:hover {
         color: $danger;

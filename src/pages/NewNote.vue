@@ -1,7 +1,18 @@
 <template>
   <h1>Add your new note here, {{ nameStore.currentUser }}</h1>
   <div class="form-container">
-    <Input v-model="noteName" placeholder="My note's name" />
+    <div class="cta-area">
+      <Input
+        v-model="noteName"
+        placeholder="My note's name"
+        class="flex-item"
+      />
+      <Select
+        :options-list="options"
+        placeholder="Type"
+        :handle-select-item="handleSelectNoteType"
+      ></Select>
+    </div>
     <Input
       v-model="noteContent"
       input-type="textarea"
@@ -10,13 +21,15 @@
     <Button
       @click="handleAddNewNote"
       :disabled="
-        !noteContent || currentUserNotesList.length >= MAX_NOTES_LENGTH
+        !noteType ||
+        !noteContent ||
+        currentUserNotesList.length >= MAX_NOTES_LENGTH
       "
     >
       <template #start-icon>
         <i class="bi bi-file-earmark-plus"></i>
       </template>
-      Add new note ({{ currentUserNotesList.length }}/{{ MAX_NOTES_LENGTH }})
+      Add new note
     </Button>
     <div class="cta-area">
       <Button color="secondary" variant="outlined" @click="router.back()">
@@ -28,9 +41,11 @@
       <Button
         variant="outlined"
         @click="router.push('/notes-list')"
-        class="flex-btn"
+        class="flex-item"
       >
-        Check notes list
+        Check notes list ({{ currentUserNotesList.length }}/{{
+          MAX_NOTES_LENGTH
+        }})
       </Button>
     </div>
   </div>
@@ -46,6 +61,7 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import Button from "../components/Button.vue";
 import Input from "../components/Input.vue";
+import Select from "../components/Select.vue";
 import { useAuth } from "../composables/useAuth";
 import { MAX_NOTES_LENGTH } from "../constants";
 import { nameStore } from "../store/nameStore";
@@ -56,7 +72,10 @@ const router = useRouter();
 const noteName = ref("");
 const noteContent = ref("");
 const noteAdded = ref(false);
+const noteType = ref("");
 const timer = ref();
+
+const options = ref(["Todo", "Reminder"]);
 
 useAuth();
 
@@ -84,16 +103,24 @@ function handleAddNewNote() {
     id: uuidv4(),
     name: noteName.value,
     username: nameStore.currentUser,
-    content: noteContentList.value,
+    content:
+      noteType.value === "Todo" ? noteContentList.value : noteContent.value,
+    type: noteType.value,
+    done: false,
   });
 
   noteName.value = "";
   noteContent.value = "";
+  noteType.value = "";
   noteAdded.value = true;
 
   timer.value = setTimeout(() => {
     noteAdded.value = false;
   }, 2000);
+}
+
+function handleSelectNoteType(value) {
+  noteType.value = value;
 }
 </script>
 
@@ -112,7 +139,7 @@ function handleAddNewNote() {
     display: flex;
     gap: $padding-2;
 
-    .flex-btn {
+    .flex-item {
       flex: 1;
     }
   }
