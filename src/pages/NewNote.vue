@@ -105,6 +105,7 @@ function handleAddNewNote() {
     username: nameStore.currentUser,
     content:
       noteType.value === "Todo" ? noteContentList.value : noteContent.value,
+    raw_content: noteContent.value,
     type: noteType.value,
     done: false,
   });

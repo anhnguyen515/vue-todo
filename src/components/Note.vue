@@ -32,31 +32,58 @@
       </div>
     </div>
     <div class="note-content">
-      <div
-        v-if="note.type === 'Todo'"
-        v-for="(noteItem, index) in note.content"
-        class="note-item"
-      >
-        <input
-          type="checkbox"
-          :id="noteItem.content + index"
-          :checked="noteItem.checked"
-          @change.prevent="handleChangeCheckedValue(note.id, index, $event)"
+      <template v-if="!isEditing">
+        <div
+          v-if="note.type === 'Todo'"
+          v-for="(noteItem, index) in note.content"
+          class="note-item"
+        >
+          <input
+            type="checkbox"
+            :id="noteItem.content + index"
+            :checked="noteItem.checked"
+            @change.prevent="handleChangeCheckedValue(note.id, index, $event)"
+          />
+          <label :for="noteItem.content + index">
+            {{ noteItem.content }}
+          </label>
+        </div>
+        <div v-else>
+          {{ note.content }}
+        </div>
+      </template>
+      <template v-else>
+        <Input
+          v-model="newNoteContent"
+          input-type="textarea"
+          placeholder="Edit note content"
         />
-        <label :for="noteItem.content + index">
-          {{ noteItem.content }}
-        </label>
-      </div>
-      <div v-else>
-        {{ note.content }}
+      </template>
+      <i
+        v-if="!isEditing"
+        class="bi bi-pencil-square edit"
+        @click="toggleEditing(note)"
+      ></i>
+      <div v-if="isEditing" class="edit-area">
+        <Button variant="outlined" size="small" @click="toggleEditing(note)">
+          Cancel
+        </Button>
+        <Button size="small" @click="handleUpdateNoteContent(note)">
+          Save
+        </Button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { noteStore } from "../store/noteStore";
+import Input from "./Input.vue";
+import Button from "./Button.vue";
+
+const isEditing = ref(false);
+const newNoteContent = ref("");
 
 const props = defineProps({
   note: { type: Object, required: true },
@@ -71,6 +98,19 @@ const unfinishedTodoArr = computed(() => {
       .filter((item) => item.id === props.note.id)[0]
       .content.filter((i) => !i.checked);
   }
+});
+
+const newNoteContentList = computed(() => {
+  const contentArr = [];
+  newNoteContent.value.split("\n").forEach((item, index) => {
+    contentArr.push({
+      id: index,
+      content: item,
+      checked: false,
+    });
+  });
+
+  return contentArr;
 });
 
 function handleChangeCheckedValue(noteId, contentId, event) {
@@ -94,6 +134,22 @@ function handleMarkAsUndone(noteId) {
 
 function handleDeleteNote(noteId) {
   noteStore.removeNote(noteId);
+}
+
+function toggleEditing(note) {
+  isEditing.value = !isEditing.value;
+  if (isEditing.value) {
+    newNoteContent.value = note.raw_content;
+  }
+}
+
+function handleUpdateNoteContent(note) {
+  noteStore.updateNoteContent(
+    note.id,
+    note.type === "Todo" ? newNoteContentList.value : newNoteContent.value,
+    newNoteContent.value
+  );
+  isEditing.value = !isEditing.value;
 }
 </script>
 
@@ -151,6 +207,30 @@ function handleDeleteNote(noteId) {
     line-height: $font-large;
     width: 100%;
     color: $gray-700;
+    position: relative;
+
+    .edit-area {
+      display: flex;
+      align-items: center;
+      gap: $padding-1;
+      justify-content: flex-end;
+    }
+
+    .edit {
+      display: none;
+      color: $info;
+      font-size: $font-large;
+      cursor: pointer;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+    }
+
+    &:hover {
+      .edit {
+        display: block;
+      }
+    }
 
     .note-item {
       display: flex;

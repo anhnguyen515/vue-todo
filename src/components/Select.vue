@@ -8,12 +8,17 @@
     >
       {{ selectLabel }}
       <template #end-icon>
-        <i class="bi bi-chevron-down"></i>
+        <i v-if="!openPopper" class="bi bi-chevron-down"></i>
+        <i v-else class="bi bi-chevron-up"></i>
       </template>
     </Button>
     <template #content>
       <div class="select-dropdown" :style="dropdownStyle">
-        <div v-for="option in optionsList" class="select-item">
+        <div
+          v-for="option in optionsList"
+          class="select-item"
+          :class="{ selected: selectValue === option }"
+        >
           <span
             @click="
               () => {
@@ -89,6 +94,11 @@ const dropdownStyle = computed(() => {
 
     &:hover {
       background-color: $gray-200;
+    }
+
+    &.selected {
+      background-color: $gray-200;
+      color: $primary;
     }
 
     .select-label {

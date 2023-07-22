@@ -1,11 +1,20 @@
 @import "../assets/root";
 
-@mixin button($btn-color, $variant) {
+@mixin button($btn-color, $variant, $size) {
   border-radius: $padding-1;
   cursor: pointer;
-  font-size: $font-regular;
+  @if $size == "small" {
+    font-size: $font-small;
+    padding: $padding-1 $padding-2;
+  } @else if $size == "regular" {
+    font-size: $font-regular;
+    padding: $padding-2 $padding-3;
+  } @else {
+    font-size: $font-regular;
+    padding: $padding-3 $padding-4;
+  }
+
   font-weight: 500;
-  padding: $padding-3 $padding-4;
   transition: background-color 0.2s, color 0.2s;
 
   display: flex;
@@ -15,7 +24,8 @@
 
   @if $variant == "contained" {
     background-color: $btn-color;
-    border: none;
+    // border: none;
+    border: 1px solid $btn-color;
 
     @if $btn-color != $secondary {
       color: $gray-100;

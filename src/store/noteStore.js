@@ -16,6 +16,12 @@ export const noteStore = reactive({
     ].checked = event.target.checked;
     localStorage.setItem("notesList", JSON.stringify(this.notesList));
   },
+  updateNoteContent(noteId, newContent, newRawContent) {
+    const noteIndex = this.notesList.findIndex((item) => item.id === noteId);
+    this.notesList[noteIndex].content = newContent;
+    this.notesList[noteIndex].raw_content = newRawContent;
+    localStorage.setItem("notesList", JSON.stringify(this.notesList));
+  },
   markNoteAsDone(noteId) {
     this.notesList.filter((item) => item.id === noteId)[0].done = true;
     localStorage.setItem("notesList", JSON.stringify(this.notesList));

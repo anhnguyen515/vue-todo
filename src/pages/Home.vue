@@ -62,7 +62,7 @@ function handleRemoveItem(value) {
       <span class="name-reset" @click="changeUser">Change user</span>
     </template>
     <template v-else>
-      <h1>May I ask who I am talking to?</h1>
+      <h1>Who is this?</h1>
       <div class="users-container">
         <Select
           v-if="nameStore.usersList.length > 0"

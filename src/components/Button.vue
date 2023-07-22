@@ -2,7 +2,7 @@
   <button
     :disabled="disabled"
     @click="emit('click')"
-    :class="{ [color]: true, [variant]: true, disabled }"
+    :class="{ [color]: true, [variant]: true, [size]: true, disabled }"
   >
     <slot name="start-icon"></slot>
     <slot></slot>
@@ -16,6 +16,7 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
   color: { type: String, default: "primary" },
   variant: { type: String, default: "contained" },
+  size: { type: String, default: "regular" },
 });
 </script>
 
@@ -25,11 +26,14 @@ const props = defineProps({
 
 @each $name, $value in $palette {
   @each $variant in $variants {
-    .#{$name}.#{$variant} {
-      @include button($value, $variant);
-      &.disabled {
-        background-color: $gray-500;
-        pointer-events: none;
+    @each $size in $sizes {
+      .#{$name}.#{$variant}.#{$size} {
+        @include button($value, $variant, $size);
+        &.disabled {
+          background-color: $gray-500;
+          border: 1px solid $gray-500;
+          pointer-events: none;
+        }
       }
     }
   }
