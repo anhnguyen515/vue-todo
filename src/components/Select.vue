@@ -22,8 +22,13 @@
           <span
             @click="
               () => {
-                handleSelectItem(option);
-                selectValue = option;
+                if (selectValue === option) {
+                  handleSelectItem('');
+                  selectValue = '';
+                } else {
+                  handleSelectItem(option);
+                  selectValue = option;
+                }
                 openPopper = false;
               }
             "

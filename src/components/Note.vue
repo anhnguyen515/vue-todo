@@ -7,10 +7,14 @@
     }"
   >
     <div class="cta-area">
-      <h2>
-        {{ note.name }}
-        <i v-if="note.done" class="bi bi-check checked"></i>
-      </h2>
+      <div>
+        <h2 v-if="!isEditing">
+          {{ note.name }}
+          <i v-if="note.done" class="bi bi-check checked"></i>
+        </h2>
+        <Input v-else v-model="newNoteTitle" placeholder="Edit note's name" />
+        <p class="note-date">{{ formattedDate }}</p>
+      </div>
       <div class="cta-area">
         <i
           v-if="note.type === 'Reminder'"
@@ -56,7 +60,7 @@
         <Input
           v-model="newNoteContent"
           input-type="textarea"
-          placeholder="Edit note content"
+          placeholder="Edit note's content"
         />
       </template>
       <i
@@ -68,7 +72,11 @@
         <Button variant="outlined" size="small" @click="toggleEditing(note)">
           Cancel
         </Button>
-        <Button size="small" @click="handleUpdateNoteContent(note)">
+        <Button
+          :disabled="!newNoteContent"
+          size="small"
+          @click="handleUpdateNoteContent(note)"
+        >
           Save
         </Button>
       </div>
@@ -81,12 +89,24 @@ import { computed, ref } from "vue";
 import { noteStore } from "../store/noteStore";
 import Input from "./Input.vue";
 import Button from "./Button.vue";
+import * as dayjs from "dayjs";
 
 const isEditing = ref(false);
+const newNoteTitle = ref("");
 const newNoteContent = ref("");
 
 const props = defineProps({
   note: { type: Object, required: true },
+});
+
+const formattedDate = computed(() => {
+  if (props.note.created_at === props.note.updated_at) {
+    return `${dayjs(props.note.created_at).format("HH:mm:ss, ddd MM/DD/YYYY")}`;
+  } else {
+    return `${dayjs(props.note.updated_at).format(
+      "HH:mm:ss, ddd MM/DD/YYYY"
+    )} (edited)`;
+  }
 });
 
 const unfinishedTodoArr = computed(() => {
@@ -139,16 +159,20 @@ function handleDeleteNote(noteId) {
 function toggleEditing(note) {
   isEditing.value = !isEditing.value;
   if (isEditing.value) {
+    newNoteTitle.value = note.name;
     newNoteContent.value = note.raw_content;
   }
 }
 
 function handleUpdateNoteContent(note) {
-  noteStore.updateNoteContent(
-    note.id,
-    note.type === "Todo" ? newNoteContentList.value : newNoteContent.value,
-    newNoteContent.value
-  );
+  noteStore.updateNoteContent(note.id, {
+    ...note,
+    name: newNoteTitle.value,
+    content:
+      note.type === "Todo" ? newNoteContentList.value : newNoteContent.value,
+    raw_content: newNoteContent.value,
+    updated_at: new Date(),
+  });
   isEditing.value = !isEditing.value;
 }
 </script>
@@ -163,6 +187,12 @@ function handleUpdateNoteContent(note) {
   padding: $padding-2 $padding-4;
   transition: background-color 0.2s, border-color 0.2s;
 
+  .note-date {
+    font-size: $font-small;
+    color: $gray-700;
+    margin-top: $padding-1;
+  }
+
   &.reminder {
     background-color: lighten($warning, 45);
     border-color: $warning;
@@ -175,11 +205,11 @@ function handleUpdateNoteContent(note) {
 
   .cta-area {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
     word-break: break-all;
-    gap: $padding-2;
+    gap: $padding-1;
   }
 
   .checked {

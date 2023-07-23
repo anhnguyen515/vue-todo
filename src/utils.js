@@ -10,3 +10,11 @@ export function debounce(fn, delayMs = 500) {
     }, delayMs);
   };
 }
+
+export function saveToLocalStorage(name, item) {
+  localStorage.setItem(name, JSON.stringify(item));
+}
+
+export function getFromLocalStorage(name) {
+  return JSON.parse(localStorage.getItem(name));
+}

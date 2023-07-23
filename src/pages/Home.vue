@@ -5,6 +5,7 @@ import Button from "../components/Button.vue";
 import Input from "../components/Input.vue";
 import Select from "../components/Select.vue";
 import { nameStore } from "../store/nameStore";
+import { getFromLocalStorage } from "../utils";
 
 const username = ref("");
 
@@ -15,8 +16,8 @@ const inputError = computed(
 );
 
 watchEffect(() => {
-  const usersList = JSON.parse(localStorage.getItem("usersList"));
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const usersList = getFromLocalStorage("usersList");
+  const currentUser = getFromLocalStorage("currentUser");
   if (usersList?.length > 0) {
     nameStore.updateUsersList(usersList);
   }
@@ -52,11 +53,9 @@ function handleRemoveItem(value) {
       <h1>Hello there, {{ nameStore.currentUser }}!</h1>
       <p>How can I help you?</p>
       <div class="btn-group">
-        <Button @click="router.push('/new-note')">
-          I want to create a new note
-        </Button>
+        <Button @click="router.push('/new-note')">Create a new note</Button>
         <Button color="secondary" @click="router.push('/notes-list')">
-          I want to check my notes list
+          My notes list
         </Button>
       </div>
       <span class="name-reset" @click="changeUser">Change user</span>

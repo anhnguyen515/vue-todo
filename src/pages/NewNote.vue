@@ -2,11 +2,7 @@
   <h1>Add your new note here, {{ nameStore.currentUser }}</h1>
   <div class="form-container">
     <div class="cta-area">
-      <Input
-        v-model="noteName"
-        placeholder="My note's name"
-        class="flex-item"
-      />
+      <Input v-model="noteName" placeholder="Note's name" class="flex-item" />
       <Select
         :options-list="options"
         placeholder="Type"
@@ -16,7 +12,7 @@
     <Input
       v-model="noteContent"
       input-type="textarea"
-      placeholder="What do I need to do?"
+      placeholder="Note's content"
     />
     <Button
       @click="handleAddNewNote"
@@ -98,6 +94,7 @@ const noteContentList = computed(() => {
 
 function handleAddNewNote() {
   clearTimeout(timer.value);
+  const dateAdded = new Date();
 
   noteStore.addNote({
     id: uuidv4(),
@@ -108,6 +105,8 @@ function handleAddNewNote() {
     raw_content: noteContent.value,
     type: noteType.value,
     done: false,
+    created_at: dateAdded,
+    updated_at: dateAdded,
   });
 
   noteName.value = "";

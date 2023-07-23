@@ -8,6 +8,7 @@
     @input="emit('update:modelValue', $event.target.value)"
     :placeholder="placeholder"
     :style="inputStyle"
+    :autofocus="autoFocus"
   />
   <div v-else class="textarea-wrapper">
     <textarea
@@ -20,6 +21,7 @@
       :placeholder="placeholder"
       maxlength="100"
       :style="inputStyle"
+      :autofocus="autoFocus"
     ></textarea>
     <span class="character-limit">{{ modelValue.length }}/100</span>
   </div>
@@ -35,6 +37,7 @@ const props = defineProps({
   inputError: { type: Boolean, default: false },
   disabled: { type: Boolean, default: false },
   inputType: { type: String, default: "input" },
+  autoFocus: { type: Boolean, default: false },
 });
 const emit = defineEmits(["update:modelValue"]);
 

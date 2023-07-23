@@ -19,5 +19,6 @@ import { RouterView } from "vue-router";
   min-height: 100vh;
   gap: $padding-2;
   padding: $padding-4;
+  // background-color: lighten($primary, 32);
 }
 </style>
